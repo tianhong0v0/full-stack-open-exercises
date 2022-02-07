@@ -6,11 +6,10 @@ const Header = ({ course }) => {
 }
 
 const Total = ({ course }) => {
-  const sum =
-    course.parts[0].exercises +
-    course.parts[1].exercises +
-    course.parts[2].exercises
-  return <p>Number of exercises {sum}</p>
+  const parts = course.parts
+  let sum = 0
+  parts.forEach((part) => (sum += part.exercises))
+  return <b>Total of {sum} exercises</b>
 }
 
 const Part = (props) => {
@@ -23,7 +22,6 @@ const Part = (props) => {
 
 const Content = ({ course }) => {
   const parts = course.parts
-  console.log('from Content: ', parts)
   return (
     <div>
       {parts.map((part) => (
@@ -34,11 +32,11 @@ const Content = ({ course }) => {
 }
 
 const Course = ({ course }) => {
-  console.log('from course', course.parts)
   return (
     <div>
       <Header course={course} />
       <Content course={course} />
+      <Total course={course} />
     </div>
   )
 }
@@ -63,10 +61,13 @@ const App = () => {
         exercises: 14,
         id: 3,
       },
+      {
+        name: 'Redux',
+        exercises: 11,
+        id: 4,
+      },
     ],
   }
-
-  console.log('from App course.parts: ', course.parts)
 
   return <Course course={course} />
 }
