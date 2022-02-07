@@ -7,9 +7,11 @@ const Header = ({ course }) => {
 
 const Total = ({ course }) => {
   const parts = course.parts
-  let sum = 0
-  parts.forEach((part) => (sum += part.exercises))
-  return <b>Total of {sum} exercises</b>
+  return (
+    <b>
+      Total of {parts.reduce((sum, part) => sum + part.exercises, 0)} exercises
+    </b>
+  )
 }
 
 const Part = (props) => {
