@@ -26,24 +26,29 @@ const App = () => {
   const h1 = 'Anecdote of the day'
   const h2 = 'Anecdote with most votes'
   const [selected, setSelected] = useState(0)
-  const [votes, setVotes] = useState(Array(anecdotes.length).fill(0))
+  const [votes, setVotes] = useState({})
+  const [mostVotes, setMostVotes] = useState(0)
 
   const generateNextIndex = () => {
     let index = Math.floor(Math.random() * anecdotes.length)
     setSelected(index)
   }
 
-  const addVote = (index) => {
-    return () => {
-      let copyOfVotes = [...votes]
-      copyOfVotes[index] += 1
-      setVotes(copyOfVotes)
+  const vote = () => {
+    const selectedVoteCount = votes[selected] || 0
+    let index = selected
+    setVotes({
+      ...votes,
+      [index]: selectedVoteCount + 1, //NB below
+    })
+    /* 'index' as a variable name, will be compiled as a string literal, thus: votes={index: 1, index: 1, index: 2 } */
+
+    /* [index] as a variable name, will be compiled as a numeric literal, thus : votes={0: 1, 1: 1, 2: 1} as desired */
+
+    if (!votes[mostVotes] || selectedVoteCount + 1 > votes[mostVotes]) {
+      setMostVotes(selected)
     }
   }
-
-  const mostVotes = () => Math.max(...votes)
-
-  const mostVotesAnecdote = () => anecdotes[votes.indexOf(Math.max(...votes))]
 
   return (
     <>
@@ -52,12 +57,12 @@ const App = () => {
         anecdote={anecdotes[selected]}
         voteNumber={votes[selected]}
       ></DisplayAnecdote>
-      <Button eventHandler={addVote(selected)} text={'vote'} />
+      <Button eventHandler={vote} text={'vote'} />
       <Button eventHandler={generateNextIndex} text={'next anecdote'} />
       <DisplayAnecdote
         head={h2}
-        anecdote={mostVotesAnecdote()}
-        voteNumber={mostVotes()}
+        anecdote={anecdotes[mostVotes]}
+        voteNumber={votes[mostVotes]}
       ></DisplayAnecdote>
     </>
   )
