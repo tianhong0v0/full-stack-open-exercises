@@ -14,6 +14,28 @@ const App = () => {
 
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
+
+  /* Notice that
+  we create two independent state variables: newName, newNumber 
+
+  Why not create a single [newPerson, setNewPerson] state? 
+  (in which that newPerson object includes two fields: newName and newNumber)
+
+  If you use this.setState in a class, 
+  which merges the updated fields into object automatically
+  in other words, this.setState updates partial object.  
+  It makes more sense to create a single newPerson object
+  
+  However, if you are using useState(), 
+  there is no automatic merging, 
+  you will have to merge these fields (name, number, ...) 
+  into the previous state object manually. 
+
+  Separating independent state variables also has another benefit.
+  It makes it easy to later extract some related logic into a custom Hook */
+
+  //But, May be I should not seperate filter and applyFilter?
+  //Since they always change together
   const [filter, setFilter] = useState('')
   const [applyFilter, setApplyFilter] = useState(false)
 
