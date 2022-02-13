@@ -4,25 +4,28 @@ import axios from 'axios'
 import Display from './components/Display'
 
 const App = () => {
-  const [c, setC] = useState([])
+  const [allResponseCountries, setAllResponseCountries] = useState([])
 
   const changeHandler = (event) => {
-    const userInput = event.target.value
-    if (userInput.length < 1) {
+    if (event.target.value.length < 1) {
       console.log('Please put some query to search for')
+      //setInputQuery('')
     } else {
+      const userInput = event.target.value
       const query = `https://restcountries.com/v3.1/name/${userInput}`
       searchQuery(query)
     }
   }
 
   const searchQuery = (query) => {
-    console.log('while Im Searching!!!')
     axios
       .get(query)
       .then((response) => response.data)
-      .then((data) => setC(data)) //set C
-      .catch((err) => console.error('hello', err.response.status))
+      .then((data) => setAllResponseCountries(data)) //set C
+      .catch((err) => {
+        console.error(err.response.status)
+        setAllResponseCountries([])
+      })
   }
 
   return (
@@ -31,7 +34,7 @@ const App = () => {
         find countries
         <input onChange={changeHandler} />
       </label>
-      <Display countries={c} />
+      <Display countries={allResponseCountries} />
     </div>
   )
 }
