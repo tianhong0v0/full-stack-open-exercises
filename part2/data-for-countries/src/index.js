@@ -4,28 +4,24 @@ import axios from 'axios'
 import Display from './components/Display'
 
 const App = () => {
+  const [inputQuery, setInputQuery] = useState('')
   const [allResponseCountries, setAllResponseCountries] = useState([])
-
-  const changeHandler = (event) => {
-    if (event.target.value.length < 1) {
-      console.log('Please put some query to search for')
-      //setInputQuery('')
-    } else {
-      const userInput = event.target.value
-      const query = `https://restcountries.com/v3.1/name/${userInput}`
-      searchQuery(query)
-    }
-  }
-
-  const searchQuery = (query) => {
+  //execute useEffect after changing inputQuery
+  useEffect(() => {
+    console.log('input query: ', inputQuery)
+    const query = `https://restcountries.com/v3.1/name/${inputQuery}`
     axios
       .get(query)
       .then((response) => response.data)
-      .then((data) => setAllResponseCountries(data)) //set C
       .catch((err) => {
+        //TO-DO: Distinguish when inputQuery is empty or cannot find certain country
         console.error(err.response.status)
         setAllResponseCountries([])
       })
+  }, [inputQuery])
+
+  const changeHandler = (event) => {
+    setInputQuery(event.target.value)
   }
 
   return (
