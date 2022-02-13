@@ -4,11 +4,28 @@ const DisplayCountryName = ({ country }) => <div>{country.name.common}</div>
 //   return <button onClick={submitHandler}></button>
 // }
 
+const NameWithButton = ({ country, show }) => {
+  return (
+    <div>
+      <form onSubmit={show}>
+        <label>
+          {country.name.common}
+          <button>show</button>
+        </label>
+      </form>
+    </div>
+  )
+}
+
 const DisplayCountries = ({ countries }) => {
+  const show = (event) => {
+    event.preventDefault(0)
+    console.log(event.target.value)
+  }
   return (
     <div>
       {countries.map((item, index) => (
-        <DisplayCountryName country={item} key={index} />
+        <NameWithButton country={item} show={show} key={index} />
       ))}
     </div>
   )
