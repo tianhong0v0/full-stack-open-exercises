@@ -57,7 +57,7 @@ const App = () => {
         find countries
         <input onChange={changeHandler} />
       </label>
-      {numberOfResponse === 0 && <>find</>}
+      {numberOfResponse === 0 && <></>}
       {numberOfResponse > 10 && (
         <div>Too many matches, specity another filter</div>
       )}
