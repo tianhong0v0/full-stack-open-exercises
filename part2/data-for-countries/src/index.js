@@ -23,6 +23,15 @@ const App = () => {
       })
   }, [inputQuery])
 
+  // useEffect(() => {
+  //   axios
+  //     .get(
+  //       'http://api.openweathermap.org/data/2.5/weather?lat=60.17&lon=24.93&appid=55dd404984962ca1d3cb49d41afb1a40&units=metric'
+  //     )
+  //     .then((response) => response.data)
+  //     .then((data) => console.log('weather response. ', data))
+  // }, [])
+
   /* once the allResponseCountries change,
   the numberOfResponse change,
   we use this sate, numberOfResponse, to decide
