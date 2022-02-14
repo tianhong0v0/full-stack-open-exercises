@@ -8,6 +8,7 @@ const App = () => {
   const [inputQuery, setInputQuery] = useState('')
   const [allResponseCountries, setAllResponseCountries] = useState([])
   const [numberOfResponse, setNumberOfResponse] = useState(0)
+  const [weather, setWeather] = useState(false)
 
   const changeHandler = (event) => {
     setInputQuery(event.target.value)
@@ -39,13 +40,32 @@ const App = () => {
   */
   useEffect(() => {
     setNumberOfResponse(allResponseCountries.length)
+    console.log('numberOfResponse', allResponseCountries.length)
   }, [allResponseCountries])
+
+  useEffect(() => {
+    console.log('Not should only be shown when one country selected')
+    if (numberOfResponse === 1) {
+      console.log('this should only be shown when one country selected')
+      axios
+        .get(
+          `http://api.openweathermap.org/data/2.5/weather?q=${allResponseCountries[0].capital}&units=metric&appid=55dd404984962ca1d3cb49d41afb1a40`
+        )
+        .then((response) => response.data)
+        .then((data) => {
+          console.log('weather response. ', data)
+          setWeather(data)
+        })
+    }
+  }, [numberOfResponse])
 
   /* how do you set target of a Button? you use custome attribute
    */
   const showButtonHandler = (event) => {
     event.preventDefault()
+    console.log('button was being clicked!')
     const countryIndex = event.target.dataset.show
+    console.log('countryIndex', countryIndex)
     const copyOfCountries = allResponseCountries
     setAllResponseCountries([copyOfCountries[countryIndex]])
   }
@@ -62,7 +82,10 @@ const App = () => {
         <div>Too many matches, specity another filter</div>
       )}
       {numberOfResponse === 1 && (
-        <DisplaySingleCountry country={allResponseCountries[0]} />
+        <DisplaySingleCountry
+          country={allResponseCountries[0]}
+          weather={weather}
+        />
       )}
       {numberOfResponse <= 10 && numberOfResponse > 1 && (
         <DisplayCountries
