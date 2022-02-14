@@ -1,17 +1,19 @@
 import ReactDOM from 'react-dom'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import axios from 'axios'
 import Display from './components/Display'
 import DisplaySingleCountry from './components/DisplayOneCountry'
 import DisplayCountries from './components/DisplayCountries'
 
+// const Button = ({ show, data-show }) => {
+//   return <button onClick={show}> show</button>
+// }
+
 const App = () => {
   const [inputQuery, setInputQuery] = useState('')
   const [allResponseCountries, setAllResponseCountries] = useState([])
-  //const [displaySingle, setDisplaySingle] = useState(false)
-  //const [tooMany, setTooMany] = useState(false)
   const [numberOfResponse, setNumberOfResponse] = useState(0)
-  //execute useEffect after changing inputQuery
+
   useEffect(() => {
     console.log('input query: ', inputQuery)
     const query = `https://restcountries.com/v3.1/name/${inputQuery}`
@@ -34,13 +36,20 @@ const App = () => {
     setInputQuery(event.target.value)
   }
 
+  //how do you set target of a Button?
+  const show = (event) => {
+    event.preventDefault()
+    const countryIndex = event.target.dataset.show
+    const copyOfCountries = allResponseCountries
+    setAllResponseCountries([copyOfCountries[countryIndex]])
+  }
+
   return (
     <div>
       <label>
         find countries
         <input onChange={changeHandler} />
       </label>
-      {/* <Display countries={allResponseCountries} /> */}
       {numberOfResponse > 10 && (
         <div>Too many matches, specity another filter</div>
       )}
@@ -48,34 +57,21 @@ const App = () => {
         <DisplaySingleCountry country={allResponseCountries[0]} />
       )}
       {numberOfResponse <= 10 && numberOfResponse > 1 && (
-        <DisplayCountries countries={allResponseCountries} />
+        <div>
+          {allResponseCountries.map((item, index) => (
+            <div key={index}>
+              {' '}
+              {item.name.common}
+              {/* the button element passed in a custom object for indicating which country to show */}
+              <button onClick={show} data-show={index}>
+                show
+              </button>
+            </div>
+          ))}
+        </div>
       )}
     </div>
   )
 }
 
 ReactDOM.render(<App />, document.getElementById('root'))
-
-/*import ReactDOM from 'react-dom'
-import React, { useState } from 'react'
-
-const AddTripButton = ({ addTrip }) => {
-  return <button onClick={addTrip}> Add a trip</button>
-}
-
-const AnotherComponent = () => <div>added!!!</div>
-
-const App = () => {
-  const [state, setState] = useState('start')
-
-  return (
-    <div>
-      {state === 'start' && (
-        <AddTripButton addTrip={() => setState('add-trip')} />
-      )}
-      {state === 'add-trip' && <AnotherComponent />}
-    </div>
-  )
-} 
-
-ReactDOM.render(<App />, document.getElementById('root')) */

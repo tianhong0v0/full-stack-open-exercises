@@ -18,14 +18,14 @@ const NameWithButton = ({ country, show }) => {
 }
 
 const DisplayCountries = ({ countries }) => {
-  const show = (event) => {
-    event.preventDefault(0)
-    console.log(event.target.value)
-  }
+  // const show = (event) => {
+  //   event.preventDefault(0)
+  //   console.log(event.target.value)
+  // }
   return (
     <div>
       {countries.map((item, index) => (
-        <NameWithButton country={item} show={show} key={index} />
+        <div> {item.name.common} </div>
       ))}
     </div>
   )
