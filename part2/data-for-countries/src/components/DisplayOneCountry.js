@@ -1,13 +1,11 @@
 import { useState, useEffect } from 'react'
 import axios from 'axios'
 
-const DisplayCountryLanguage = ({ lang }) => <li>{lang}</li>
-
 const DisplayLanguages = ({ languages }) => {
   return (
     <ul>
       {languages.map((item, index) => (
-        <DisplayCountryLanguage key={index} lang={item} />
+        <li key={index}>{item}</li>
       ))}
     </ul>
   )
