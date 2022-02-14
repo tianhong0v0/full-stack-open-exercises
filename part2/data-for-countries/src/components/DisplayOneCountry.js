@@ -14,7 +14,6 @@ const DisplayLanguages = ({ languages }) => {
 }
 
 const DisplaySingleCountry = ({ country }) => {
-  //const [created, setCreated] = useState(false)
   const [weather, setWeather] = useState(false)
 
   useEffect(() => {
@@ -44,6 +43,12 @@ const DisplaySingleCountry = ({ country }) => {
         {weather && (
           <>
             <div>temperature {weather.main.temp} Celcius </div>
+            <div>
+              <img
+                src={`http://openweathermap.org/img/wn/${weather.weather[0].icon}@2x.png`}
+                alt='Weather Icon'
+              />
+            </div>
             <div>wind {weather.wind.speed} m/s</div>
           </>
         )}
