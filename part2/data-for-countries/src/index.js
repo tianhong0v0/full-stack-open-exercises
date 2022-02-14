@@ -1,13 +1,8 @@
 import ReactDOM from 'react-dom'
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import axios from 'axios'
-import Display from './components/Display'
 import DisplaySingleCountry from './components/DisplayOneCountry'
 import DisplayCountries from './components/DisplayCountries'
-
-// const Button = ({ show, data-show }) => {
-//   return <button onClick={show}> show</button>
-// }
 
 const App = () => {
   const [inputQuery, setInputQuery] = useState('')
@@ -28,6 +23,10 @@ const App = () => {
       })
   }, [inputQuery])
 
+  /* once the allResponseCountries change,
+  the numberOfResponse change,
+  we use this sate, numberOfResponse, to decide
+  whether we  DisplayOneCountry or DisplayCountries */
   useEffect(() => {
     setNumberOfResponse(allResponseCountries.length)
   }, [allResponseCountries])
@@ -36,8 +35,8 @@ const App = () => {
     setInputQuery(event.target.value)
   }
 
-  //how do you set target of a Button?
-  const show = (event) => {
+  //how do you set target of a Button? you use custome attribute
+  const showButtonHandler = (event) => {
     event.preventDefault()
     const countryIndex = event.target.dataset.show
     const copyOfCountries = allResponseCountries
@@ -57,18 +56,10 @@ const App = () => {
         <DisplaySingleCountry country={allResponseCountries[0]} />
       )}
       {numberOfResponse <= 10 && numberOfResponse > 1 && (
-        <div>
-          {allResponseCountries.map((item, index) => (
-            <div key={index}>
-              {' '}
-              {item.name.common}
-              {/* the button element passed in a custom object for indicating which country to show */}
-              <button onClick={show} data-show={index}>
-                show
-              </button>
-            </div>
-          ))}
-        </div>
+        <DisplayCountries
+          countries={allResponseCountries}
+          showButtonHandler={showButtonHandler}
+        />
       )}
     </div>
   )

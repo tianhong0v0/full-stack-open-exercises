@@ -1,31 +1,30 @@
-const DisplayCountryName = ({ country }) => <div>{country.name.common}</div>
+/* Notice that inside the <button> element,
+there is a custom attribute, data-show={index}. 
 
-// const Button = ({ country, submitHandler }) => {
-//   return <button onClick={submitHandler}></button>
-// }
+The Event Handler, showButtonHandler, needs to know 
+which particular country to will be showed. 
 
-const NameWithButton = ({ country, show }) => {
-  return (
-    <div>
-      <form onSubmit={show}>
-        <label>
-          {country.name.common}
-          <button>show</button>
-        </label>
-      </form>
-    </div>
-  )
-}
+Thus, we define this custom attribute, 
+to pass in the index of the selected country.
 
-const DisplayCountries = ({ countries }) => {
-  // const show = (event) => {
-  //   event.preventDefault(0)
-  //   console.log(event.target.value)
-  // }
+Then, the Event Handler will 
+have access to this selected country's index, 
+therefore,
+it can set AllResponseCountries to this single country. 
+*/
+
+//TODO: How to refactor this module into DisplayCountries and Button component?
+const DisplayCountries = ({ countries, showButtonHandler }) => {
   return (
     <div>
       {countries.map((item, index) => (
-        <div> {item.name.common} </div>
+        <div key={index}>
+          {' '}
+          {item.name.common}
+          <button onClick={showButtonHandler} data-show={index}>
+            show
+          </button>
+        </div>
       ))}
     </div>
   )
