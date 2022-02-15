@@ -1,7 +1,7 @@
 import ReactDOM from 'react-dom'
 import React, { useEffect, useState } from 'react'
 import axios from 'axios'
-import DisplaySingleCountry from './components/DisplayOneCountry'
+import DisplaySingleCountry from './components/DisplaySingleCountry'
 import DisplayCountries from './components/DisplayCountries'
 
 const App = () => {
