@@ -5,6 +5,7 @@ import DisplaySingleCountry from './components/DisplaySingleCountry'
 import DisplayCountries from './components/DisplayCountries'
 
 const App = () => {
+  const api_key = process.env.REACT_APP_API_KEY
   const [inputQuery, setInputQuery] = useState('')
   const [allResponseCountries, setAllResponseCountries] = useState([])
   const [numberOfResponse, setNumberOfResponse] = useState(0)
@@ -18,7 +19,6 @@ const App = () => {
   search for all countries corresponding to it
   */
   useEffect(() => {
-    console.log('input query: ', inputQuery)
     if (inputQuery.length === 0) {
       setAllResponseCountries([])
       setNumberOfResponse(0)
@@ -42,17 +42,13 @@ const App = () => {
   */
   useEffect(() => {
     setNumberOfResponse(allResponseCountries.length)
-    console.log('numberOfResponse', allResponseCountries.length)
-
     if (allResponseCountries.length === 1) {
-      console.log('this should only be shown when one country selected')
       axios
         .get(
-          `http://api.openweathermap.org/data/2.5/weather?q=${allResponseCountries[0].capital}&units=metric&appid=55dd404984962ca1d3cb49d41afb1a40`
+          `http://api.openweathermap.org/data/2.5/weather?q=${allResponseCountries[0].capital}&units=metric&appid=${api_key}`
         )
         .then((response) => response.data)
         .then((data) => {
-          console.log('weather response. ', data)
           setWeather(data)
         })
     } else {
@@ -64,9 +60,7 @@ const App = () => {
    */
   const showButtonHandler = (event) => {
     event.preventDefault()
-    console.log('button was being clicked!')
     const countryIndex = event.target.dataset.show
-    console.log('countryIndex', countryIndex)
     const copyOfCountries = allResponseCountries
     setAllResponseCountries([copyOfCountries[countryIndex]])
   }
