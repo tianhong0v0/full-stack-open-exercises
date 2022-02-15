@@ -21,6 +21,8 @@ const App = () => {
     console.log('input query: ', inputQuery)
     if (inputQuery.length === 0) {
       setAllResponseCountries([])
+      setNumberOfResponse(0)
+      setWeather(false)
     } else {
       const query = `https://restcountries.com/v3.1/name/${inputQuery}`
       axios
@@ -41,11 +43,8 @@ const App = () => {
   useEffect(() => {
     setNumberOfResponse(allResponseCountries.length)
     console.log('numberOfResponse', allResponseCountries.length)
-  }, [allResponseCountries])
 
-  useEffect(() => {
-    console.log('Not should only be shown when one country selected')
-    if (numberOfResponse === 1) {
+    if (allResponseCountries.length === 1) {
       console.log('this should only be shown when one country selected')
       axios
         .get(
@@ -56,8 +55,10 @@ const App = () => {
           console.log('weather response. ', data)
           setWeather(data)
         })
+    } else {
+      setWeather(false)
     }
-  }, [numberOfResponse])
+  }, [allResponseCountries])
 
   /* how do you set target of a Button? you use custome attribute
    */
@@ -77,11 +78,12 @@ const App = () => {
         find countries
         <input onChange={changeHandler} />
       </label>
+      {inputQuery.length === 0 && <></>}
       {numberOfResponse === 0 && <></>}
       {numberOfResponse > 10 && (
         <div>Too many matches, specity another filter</div>
       )}
-      {numberOfResponse === 1 && (
+      {numberOfResponse === 1 && weather && (
         <DisplaySingleCountry
           country={allResponseCountries[0]}
           weather={weather}

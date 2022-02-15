@@ -9,7 +9,6 @@ const DisplayLanguages = ({ languages }) => {
 }
 
 const DisplaySingleCountry = ({ country, weather }) => {
-  console.log('what the fcuk is single country', country)
   return (
     <div>
       <h2>{country.name.common}</h2>

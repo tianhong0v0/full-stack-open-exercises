@@ -1,3 +1,4 @@
+import DisplaySingleCountry from './DisplaySingleCountry'
 /* Notice that inside the <button> element,
 there is a custom attribute, data-show={index}. 
 
@@ -14,7 +15,8 @@ it can set AllResponseCountries to this single country.
 */
 
 //TODO: How to refactor this module into DisplayCountries and Button component?
-const DisplayCountries = ({ countries, showButtonHandler }) => {
+
+const DisplayCountries = ({ countries, weather, showButtonHandler }) => {
   return (
     <div>
       {countries.map((item, index) => (
