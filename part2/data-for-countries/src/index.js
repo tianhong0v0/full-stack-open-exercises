@@ -9,11 +9,36 @@ const App = () => {
   const [inputQuery, setInputQuery] = useState('')
   const [allResponseCountries, setAllResponseCountries] = useState([])
   const [numberOfResponse, setNumberOfResponse] = useState(0)
+  /* The state weather is owned by App component,
+    and get passed down as props to child component DisplaySingleCountry
+    However, I now feel like DisplaySingleCountry should own this state 
+  */
   const [weather, setWeather] = useState(false)
 
   const changeHandler = (event) => {
     setInputQuery(event.target.value)
   }
+
+  /*IMPORTANT NOTE ON useEffect: 
+    useEffect does not actively watching for changes.
+
+    when you call useEffect,
+    it was effectively queuing an effect to MAYBE run,
+    after render is done. 
+
+    After rendering finishes, 
+    useEffect will check the list of dependency values 
+    against the values from the last render, 
+    and will call your effect function 
+    if any one of them has changed.
+
+    If the dependency value have changes,
+    useEffect runs its first argument. 
+
+    If you want to implement clean up function like (componentWillUnmount),
+    let useEffect return this function , 
+    and React will call it prior to unmounting.
+  */
 
   /* whenever inputQuery changes, 
   search for all countries corresponding to it
