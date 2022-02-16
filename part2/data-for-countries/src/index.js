@@ -37,8 +37,30 @@ const App = () => {
     }
   }, [inputQuery])
 
+  /* The previous mistake I made: 
+     Whenever inputQuery changes, setAllResponseCountries;
+     Whenever AllResponseCountries changes, setNumberOfResponse;
+     Whenever numberOfResponse changes, check if it was 1;
+     if the numberOfResponse === 1, setWeather.
+
+     Everything after the first "whenever", 
+     relys on an wrong assumption,
+     which is the states updates synchronously. 
+
+    After experienment, I found that is not true.
+     Inside the React.Component document, 
+     the React team wrote:
+
+     "React may batch multiple setState() calls 
+     into a single update for performance. 
+     Because this.props and this.state may be updated asynchronously, 
+     you SHOULD NOT RELY ON THEIR VALUES
+     TO CALCULATE NEXT VALUE" 
+  */
+
   /* Whenever allResponseCountries changes,
-  the numberOfResponse change,
+      setNumberOfResponse, 
+      and setWeather if there is only one reponse country
   */
   useEffect(() => {
     setNumberOfResponse(allResponseCountries.length)
