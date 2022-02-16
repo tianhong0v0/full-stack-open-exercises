@@ -9,8 +9,6 @@ const DisplayLanguages = ({ languages }) => {
 }
 
 const DisplaySingleCountry = ({ country, weather }) => {
-  console.log('here inside Display single, country is', country)
-
   return (
     <div>
       <h1>{country.name.common}</h1>

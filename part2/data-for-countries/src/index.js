@@ -37,7 +37,6 @@ const App = () => {
         )
         .then((response) => response.data)
         .then((data) => {
-          console.log('weather inside coun,')
           setWeather(data)
         })
     }
@@ -59,7 +58,7 @@ const App = () => {
           value={inputQuery}
         />
       </label>
-      {allResponseCountries.length === 0 && <>haha</>}
+      {allResponseCountries.length === 0 && <></>}
       {allResponseCountries.length > 10 && (
         <div>Too many matches, specity another filter</div>
       )}
