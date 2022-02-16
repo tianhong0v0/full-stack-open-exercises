@@ -8,16 +8,12 @@ const App = () => {
   const api_key = process.env.REACT_APP_API_KEY
   const [inputQuery, setInputQuery] = useState('')
   const [allResponseCountries, setAllResponseCountries] = useState([])
-  const [numberOfResponse, setNumberOfResponse] = useState(0)
+  //const [numberOfResponse, setNumberOfResponse] = useState(0) //delete this state
   /* The state weather is owned by App component,
     and get passed down as props to child component DisplaySingleCountry
     However, I now feel like DisplaySingleCountry should own this state 
   */
   const [weather, setWeather] = useState(false)
-
-  const changeHandler = (event) => {
-    setInputQuery(event.target.value)
-  }
 
   /*IMPORTANT NOTE ON useEffect: 
     useEffect does not actively watching for changes.
@@ -34,10 +30,6 @@ const App = () => {
 
     If the dependency value have changes,
     useEffect runs its first argument. 
-
-    If you want to implement clean up function like (componentWillUnmount),
-    let useEffect return this function , 
-    and React will call it prior to unmounting.
   */
 
   /* whenever inputQuery changes, 
@@ -46,7 +38,6 @@ const App = () => {
   useEffect(() => {
     if (inputQuery.length === 0) {
       setAllResponseCountries([])
-      setNumberOfResponse(0)
       setWeather(false)
     } else {
       const query = `https://restcountries.com/v3.1/name/${inputQuery}`
@@ -88,7 +79,6 @@ const App = () => {
       and setWeather if there is only one reponse country
   */
   useEffect(() => {
-    setNumberOfResponse(allResponseCountries.length)
     if (allResponseCountries.length === 1) {
       axios
         .get(
@@ -101,7 +91,7 @@ const App = () => {
     } else {
       setWeather(false)
     }
-  }, [allResponseCountries])
+  }, [allResponseCountries, api_key])
 
   /* how do you set target of a Button? you use custome attribute
    */
@@ -117,20 +107,23 @@ const App = () => {
     <div>
       <label>
         find countries
-        <input onChange={changeHandler} />
+        <input
+          onChange={(e) => setInputQuery(e.target.value)}
+          value={inputQuery}
+        />
       </label>
       {inputQuery.length === 0 && <></>}
-      {numberOfResponse === 0 && <></>}
-      {numberOfResponse > 10 && (
+      {allResponseCountries.length === 0 && <></>}
+      {allResponseCountries.length > 10 && (
         <div>Too many matches, specity another filter</div>
       )}
-      {numberOfResponse === 1 && weather && (
+      {allResponseCountries.length === 1 && weather && (
         <DisplaySingleCountry
           country={allResponseCountries[0]}
           weather={weather}
         />
       )}
-      {numberOfResponse <= 10 && numberOfResponse > 1 && (
+      {allResponseCountries.length <= 10 && allResponseCountries.length > 1 && (
         <DisplayCountries
           countries={allResponseCountries}
           showButtonHandler={showButtonHandler}

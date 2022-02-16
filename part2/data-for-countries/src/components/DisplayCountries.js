@@ -15,8 +15,10 @@ it can set AllResponseCountries to this single country.
 */
 
 //TODO: How to refactor this module into DisplayCountries and Button component?
+//TODO: Instead of data-show custom attribute,
+//useRef() to pass down single country may be a better choice
 
-const DisplayCountries = ({ countries, weather, showButtonHandler }) => {
+const DisplayCountries = ({ countries, showButtonHandler }) => {
   return (
     <div>
       {countries.map((item, index) => (
