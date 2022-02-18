@@ -40,7 +40,18 @@ const App = () => {
   const addPerson = (event) => {
     event.preventDefault()
     if (persons.some((item) => item.name === newName)) {
-      alert(`${newName} is already added to phonebook`)
+      alert(
+        `${newName} is already added to phonebook, replace the old number with a new one?`
+      )
+      const p = persons.find((item) => item.name === newName)
+      console.log('p', p)
+      const pid = p.id
+      const changedP = { ...p, number: newNumber }
+      phonebookService
+        .update(pid, changedP)
+        .then((response) =>
+          setPersons(persons.map((item) => (item.id === pid ? response : item)))
+        )
     } else {
       const personObject = {
         name: newName, //using name as key
