@@ -73,9 +73,8 @@ const App = () => {
   }
 
   const deletePerson = async (id) => {
-    const p = persons.find((item) => item.id == id)
-    const pname = p.name
-    if (window.confirm(`Delete ${pname}`)) {
+    const personToDelete = persons.find((item) => item.id === id)
+    if (window.confirm(`Delete ${personToDelete.name}`)) {
       await phonebookService.deletePerson(id)
       phonebookService.getAll().then((response) => setPersons(response))
     }
