@@ -57,9 +57,10 @@ const App = () => {
   const deletePerson = async (id) => {
     const p = persons.find((item) => item.id == id)
     const pname = p.name
-    window.confirm(`Delete ${pname}`)
-    await phonebookService.deletePerson(id)
-    phonebookService.getAll().then((response) => setPersons(response))
+    if (window.confirm(`Delete ${pname}`)) {
+      await phonebookService.deletePerson(id)
+      phonebookService.getAll().then((response) => setPersons(response))
+    }
   }
 
   return (
@@ -79,7 +80,7 @@ const App = () => {
         persons={persons}
         apply={applyFilter}
         filter={filter}
-        deletePerson={deletePerson}
+        deleteP={deletePerson}
       />
     </div>
   )

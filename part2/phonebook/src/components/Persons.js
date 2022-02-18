@@ -6,7 +6,7 @@ const Person = ({ person, deletePerson }) => (
   </div>
 )
 
-const Persons = ({ persons, apply, filter, deletePerson }) => {
+const Persons = ({ persons, apply, filter, deleteP }) => {
   const personsToShow = apply
     ? persons.filter((item) => item.name.toLowerCase().includes(filter))
     : persons
@@ -16,7 +16,7 @@ const Persons = ({ persons, apply, filter, deletePerson }) => {
         <Person
           person={person}
           key={person.name}
-          deletePerson={() => deletePerson(person.id)}
+          deletePerson={() => deleteP(person.id)}
         />
       ))}
     </div>
