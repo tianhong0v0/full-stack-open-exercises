@@ -54,6 +54,14 @@ const App = () => {
     setNewNumber('')
   }
 
+  const deletePerson = async (id) => {
+    const p = persons.find((item) => item.id == id)
+    const pname = p.name
+    window.confirm(`Delete ${pname}`)
+    await phonebookService.deletePerson(id)
+    phonebookService.getAll().then((response) => setPersons(response))
+  }
+
   return (
     <div>
       <h2>Phonebook</h2>
@@ -67,7 +75,12 @@ const App = () => {
         newNumber={newNumber}
       />
       <h3>Numbers</h3>
-      <Persons persons={persons} apply={applyFilter} filter={filter} />
+      <Persons
+        persons={persons}
+        apply={applyFilter}
+        filter={filter}
+        deletePerson={deletePerson}
+      />
     </div>
   )
 }

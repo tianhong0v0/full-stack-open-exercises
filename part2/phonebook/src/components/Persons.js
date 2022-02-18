@@ -1,19 +1,23 @@
-import React, { useState } from 'react'
+import React from 'react'
 
-const Person = ({ person }) => (
+const Person = ({ person, deletePerson }) => (
   <div>
-    {person.name} {person.number}
+    {person.name} {person.number} <button onClick={deletePerson}>delete</button>
   </div>
 )
 
-const Persons = ({ persons, apply, filter }) => {
+const Persons = ({ persons, apply, filter, deletePerson }) => {
   const personsToShow = apply
     ? persons.filter((item) => item.name.toLowerCase().includes(filter))
     : persons
   return (
     <div>
       {personsToShow.map((person) => (
-        <Person person={person} key={person.name} />
+        <Person
+          person={person}
+          key={person.name}
+          deletePerson={() => deletePerson(person.id)}
+        />
       ))}
     </div>
   )
