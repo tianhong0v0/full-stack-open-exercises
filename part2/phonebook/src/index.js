@@ -31,7 +31,6 @@ const App = () => {
     setNewNumber(event.target.value)
   }
 
-  //set applyFilter, filter when input is not empty
   const handleFilterChange = (event) => {
     setFilter(event.target.value)
   }
@@ -62,19 +61,24 @@ const App = () => {
     alert(
       `${newName} is already added to phonebook, replace the old number with a new one?`
     )
-    const p = persons.find((item) => item.name === newName)
-    console.log('p', p)
-    const pid = p.id
-    const changedP = { ...p, number: newNumber }
+    const personToUpdate = persons.find((item) => item.name === newName)
+    const changedPerson = { ...personToUpdate, number: newNumber }
     phonebookService
-      .update(pid, changedP)
+      .update(personToUpdate.id, changedPerson)
       .then((response) => {
-        setPersons(persons.map((item) => (item.id === pid ? response : item)))
+        setPersons(
+          persons.map((item) =>
+            item.id === personToUpdate.id ? response : item
+          )
+        )
         notify(`Updated ${response.name} successfully`, 'info')
       })
       .catch((err) => {
-        notify(`${p.name} has already been removed from server`, 'alert')
-        setPersons(persons.filter((item) => item.id !== pid))
+        notify(
+          `${personToUpdate.name} has already been removed from server`,
+          'alert'
+        )
+        setPersons(persons.filter((item) => item.id !== personToUpdate.id))
       })
   }
 
@@ -88,6 +92,11 @@ const App = () => {
       })
     }
   }
+
+  const personsToShow =
+    filter.length !== 0
+      ? persons.filter((item) => item.name.toLowerCase().includes(filter))
+      : persons
 
   return (
     <div>
@@ -103,7 +112,7 @@ const App = () => {
         newNumber={newNumber}
       />
       <h3>Numbers</h3>
-      <Persons persons={persons} filter={filter} deleteP={deletePerson} />
+      <Persons persons={personsToShow} deleteP={deletePerson} />
     </div>
   )
 }

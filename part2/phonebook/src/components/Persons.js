@@ -6,13 +6,10 @@ const Person = ({ person, deletePerson }) => (
   </div>
 )
 
-const Persons = ({ persons, filter, deleteP }) => {
-  const personsToShow = filter
-    ? persons.filter((item) => item.name.toLowerCase().includes(filter))
-    : persons
+const Persons = ({ persons, deleteP }) => {
   return (
     <div>
-      {personsToShow.map((person) => (
+      {persons.map((person) => (
         <Person
           person={person}
           key={person.name}
