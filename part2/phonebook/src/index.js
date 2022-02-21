@@ -11,9 +11,7 @@ const App = () => {
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [filter, setFilter] = useState('')
-  const [applyFilter, setApplyFilter] = useState(false)
-
-  const [notification, setNotification] = useState(null)
+  const [notification, setNotification] = useState('')
 
   useEffect(() => {
     phonebookService.getAll().then((response) => setPersons(response))
@@ -35,14 +33,7 @@ const App = () => {
 
   //set applyFilter, filter when input is not empty
   const handleFilterChange = (event) => {
-    let inputChars = event.target.value
-    if (inputChars.length > 0) {
-      setApplyFilter(true)
-      setFilter(inputChars.toLowerCase())
-    } else {
-      setApplyFilter(false)
-      setFilter('')
-    }
+    setFilter(event.target.value)
   }
 
   const addOrUpdate = (event) => {
@@ -79,7 +70,7 @@ const App = () => {
       .update(pid, changedP)
       .then((response) => {
         setPersons(persons.map((item) => (item.id === pid ? response : item)))
-        notify(`Updated ${response.name} successfully`, 'alert')
+        notify(`Updated ${response.name} successfully`, 'info')
       })
       .catch((err) => {
         notify(`${p.name} has already been removed from server`, 'alert')
@@ -102,7 +93,7 @@ const App = () => {
     <div>
       <h2>Phonebook</h2>
       <Notification notification={notification} />
-      <Filter filterChangeHandler={handleFilterChange} />
+      <Filter filterChangeHandler={handleFilterChange} value={filter} />
       <h3>add a new</h3>
       <PersonForm
         nameChangeHandler={handleNameChange}
@@ -112,12 +103,7 @@ const App = () => {
         newNumber={newNumber}
       />
       <h3>Numbers</h3>
-      <Persons
-        persons={persons}
-        apply={applyFilter}
-        filter={filter}
-        deleteP={deletePerson}
-      />
+      <Persons persons={persons} filter={filter} deleteP={deletePerson} />
     </div>
   )
 }

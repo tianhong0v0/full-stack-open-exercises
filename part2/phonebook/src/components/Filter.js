@@ -1,10 +1,10 @@
-import React, { useState } from 'react'
+import React from 'react'
 
-const Filter = ({ filterChangeHandler }) => {
+const Filter = ({ filterChangeHandler, value }) => {
   return (
     <label>
       filter shown with
-      <input onChange={filterChangeHandler} />
+      <input onChange={filterChangeHandler} value={value} />
     </label>
   )
 }

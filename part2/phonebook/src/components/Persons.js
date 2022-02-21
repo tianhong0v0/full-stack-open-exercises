@@ -6,8 +6,8 @@ const Person = ({ person, deletePerson }) => (
   </div>
 )
 
-const Persons = ({ persons, apply, filter, deleteP }) => {
-  const personsToShow = apply
+const Persons = ({ persons, filter, deleteP }) => {
+  const personsToShow = filter
     ? persons.filter((item) => item.name.toLowerCase().includes(filter))
     : persons
   return (
