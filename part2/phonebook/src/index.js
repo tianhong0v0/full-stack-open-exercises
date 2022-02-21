@@ -3,14 +3,19 @@ import React, { useEffect, useState } from 'react'
 import Persons from './components/Persons'
 import Filter from './components/Filter'
 import PersonForm from './components/PersonForm'
+import SuccessMessage from './components/SuccessMessage'
+import ErrorMessage from './components/ErrorMessage'
 import phonebookService from './services/phonebook'
-
+import './index.css'
 const App = () => {
   const [persons, setPersons] = useState([])
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [filter, setFilter] = useState('')
   const [applyFilter, setApplyFilter] = useState(false)
+
+  const [success, setSuccess] = useState(null)
+  const [error, setError] = useState(null)
 
   useEffect(() => {
     phonebookService.getAll().then((response) => setPersons(response))
@@ -52,9 +57,10 @@ const App = () => {
       name: newName, //using name as key
       number: newNumber,
     }
-    phonebookService
-      .create(personObject)
-      .then((response) => setPersons(persons.concat(response)))
+    phonebookService.create(personObject).then((response) => {
+      setPersons(persons.concat(response))
+      setSuccess(`Added ${response.name}`)
+    })
   }
 
   const updatePerson = () => {
@@ -67,9 +73,14 @@ const App = () => {
     const changedP = { ...p, number: newNumber }
     phonebookService
       .update(pid, changedP)
-      .then((response) =>
+      .then((response) => {
         setPersons(persons.map((item) => (item.id === pid ? response : item)))
-      )
+        setSuccess(`Updated ${response.name}`)
+      })
+      .catch((err) => {
+        setError(`${p.name} has already been removed from server`)
+        setPersons(persons.filter((item) => item.id !== pid))
+      })
   }
 
   const deletePerson = async (id) => {
@@ -83,6 +94,8 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+      <SuccessMessage message={success} />
+      <ErrorMessage message={error} />
       <Filter filterChangeHandler={handleFilterChange} />
       <h3>add a new</h3>
       <PersonForm
