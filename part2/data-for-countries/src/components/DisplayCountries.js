@@ -15,9 +15,7 @@ const DisplayCountries = ({ countries, showButtonHandler }) => {
         <div key={index}>
           {' '}
           {item.name.common}
-          <button onClick={showButtonHandler} data-show={index}>
-            show
-          </button>
+          <button onClick={() => showButtonHandler(index)}>show</button>
         </div>
       ))}
     </div>

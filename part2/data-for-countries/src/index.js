@@ -42,11 +42,8 @@ const App = () => {
     }
   }, [allResponseCountries, api_key])
 
-  const showButtonHandler = (event) => {
-    event.preventDefault()
-    const countryIndex = event.target.dataset.show
-    const copyOfCountries = allResponseCountries
-    setAllResponseCountries([copyOfCountries[countryIndex]])
+  const showButtonHandler = (index) => {
+    setAllResponseCountries([allResponseCountries[index]])
   }
 
   return (
