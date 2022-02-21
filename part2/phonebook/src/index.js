@@ -3,10 +3,9 @@ import React, { useEffect, useState } from 'react'
 import Persons from './components/Persons'
 import Filter from './components/Filter'
 import PersonForm from './components/PersonForm'
-import SuccessMessage from './components/SuccessMessage'
-import ErrorMessage from './components/ErrorMessage'
+import Notification from './components/Notification'
 import phonebookService from './services/phonebook'
-import './index.css'
+
 const App = () => {
   const [persons, setPersons] = useState([])
   const [newName, setNewName] = useState('')
@@ -14,13 +13,18 @@ const App = () => {
   const [filter, setFilter] = useState('')
   const [applyFilter, setApplyFilter] = useState(false)
 
-  const [success, setSuccess] = useState(null)
-  const [error, setError] = useState(null)
+  const [notification, setNotification] = useState(null)
 
   useEffect(() => {
     phonebookService.getAll().then((response) => setPersons(response))
   }, [])
 
+  const notify = (content, type) => {
+    setNotification({
+      content: content,
+      type: type,
+    })
+  }
   const handleNameChange = (event) => {
     setNewName(event.target.value)
   }
@@ -59,7 +63,7 @@ const App = () => {
     }
     phonebookService.create(personObject).then((response) => {
       setPersons(persons.concat(response))
-      setSuccess(`Added ${response.name}`)
+      notify(`Added ${response.name} Successfully`, 'info')
     })
   }
 
@@ -75,10 +79,10 @@ const App = () => {
       .update(pid, changedP)
       .then((response) => {
         setPersons(persons.map((item) => (item.id === pid ? response : item)))
-        setSuccess(`Updated ${response.name}`)
+        notify(`Updated ${response.name} successfully`, 'alert')
       })
       .catch((err) => {
-        setError(`${p.name} has already been removed from server`)
+        notify(`${p.name} has already been removed from server`, 'alert')
         setPersons(persons.filter((item) => item.id !== pid))
       })
   }
@@ -87,15 +91,17 @@ const App = () => {
     const personToDelete = persons.find((item) => item.id === id)
     if (window.confirm(`Delete ${personToDelete.name}`)) {
       await phonebookService.deletePerson(id)
-      phonebookService.getAll().then((response) => setPersons(response))
+      phonebookService.getAll().then((response) => {
+        setPersons(response)
+        notify(`Deleted ${personToDelete.name} Successfully`, 'info')
+      })
     }
   }
 
   return (
     <div>
       <h2>Phonebook</h2>
-      <SuccessMessage message={success} />
-      <ErrorMessage message={error} />
+      <Notification notification={notification} />
       <Filter filterChangeHandler={handleFilterChange} />
       <h3>add a new</h3>
       <PersonForm
