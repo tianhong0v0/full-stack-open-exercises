@@ -112,7 +112,7 @@ const App = () => {
         newNumber={newNumber}
       />
       <h3>Numbers</h3>
-      <Persons persons={personsToShow} deleteP={deletePerson} />
+      <Persons persons={personsToShow} deletePerson={deletePerson} />
     </div>
   )
 }
