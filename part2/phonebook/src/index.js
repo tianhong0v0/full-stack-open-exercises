@@ -51,10 +51,16 @@ const App = () => {
       name: newName, //using name as key
       number: newNumber,
     }
-    phonebookService.create(personObject).then((response) => {
-      setPersons(persons.concat(response))
-      notify(`Added ${response.name} Successfully`, 'info')
-    })
+    phonebookService
+      .create(personObject)
+      .then((response) => {
+        setPersons(persons.concat(response))
+        notify(`Added ${response.name} Successfully`, 'info')
+      })
+      .catch((error) => {
+        console.log(error.response.data)
+        notify(`${JSON.stringify(error.response.data.error)}`, alert)
+      })
   }
 
   const updatePerson = () => {
@@ -73,19 +79,16 @@ const App = () => {
         )
         notify(`Updated ${response.name} successfully`, 'info')
       })
-      .catch((err) => {
-        notify(
-          `${personToUpdate.name} has already been removed from server`,
-          'alert'
-        )
-        setPersons(persons.filter((item) => item.id !== personToUpdate.id))
+      .catch((error) => {
+        console.log(error.response.data)
+        notify(`${JSON.stringify(error.response.data.error)}`, alert)
       })
   }
 
-  const deletePerson = async (id) => {
+  const deletePerson = (id) => {
     const personToDelete = persons.find((item) => item.id === id)
     if (window.confirm(`Delete ${personToDelete.name}`)) {
-      await phonebookService.deletePerson(id)
+      phonebookService.deletePerson(id)
       phonebookService.getAll().then((response) => {
         setPersons(response)
         notify(`Deleted ${personToDelete.name} Successfully`, 'info')
