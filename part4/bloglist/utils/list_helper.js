@@ -39,11 +39,12 @@ const mostBlogs = (blogs) => {
 
 const mostLikes = (blogs) => {
   const authors = _.groupBy(blogs, (item) => item.author)
-
-  const fav = _.last(_.sortBy(authors, (item) => totalLikes(item)))
+  //groupBy returns an object instead of an array
+  const fav = _.last(_.sortBy(authors, (value) => totalLikes(value)))
 
   return {
-    author: fav[0].author,
+    author: fav[0].author, //all items in the array fav has one same author
+    //there shall be better way to access author name
     likes: totalLikes(fav),
   }
 }
