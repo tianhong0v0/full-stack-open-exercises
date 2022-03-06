@@ -2,6 +2,7 @@ const http = require('http')
 const express = require('express')
 const app = express()
 const cors = require('cors')
+const config = require('./utils/config')
 const mongoose = require('mongoose')
 
 const blogSchema = new mongoose.Schema({
@@ -13,8 +14,12 @@ const blogSchema = new mongoose.Schema({
 
 const Blog = mongoose.model('Blog', blogSchema)
 
-const mongoUrl = 'mongodb://localhost/bloglist'
-mongoose.connect(mongoUrl)
+mongoose
+  .connect(config.MONGODB_URI)
+  .then((result) =>
+    console.log(`Successfully connected to ${config.MONGODB_URI}`)
+  )
+  .catch((error) => console.log(error))
 
 app.use(cors())
 app.use(express.json())
