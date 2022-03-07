@@ -21,6 +21,10 @@ test('all blogs are returned as json', async () => {
     .get('/api/blogs')
     .expect(200)
     .expect('Content-Type', /application\/json/)
+  console.log(`ret as json: ${response}`)
+  console.log(`ret as json: ${response.body}`)
+
+  //weird response.body works anyway
   expect(response.body).toHaveLength(helper.initialBlogs.length)
 })
 
@@ -68,6 +72,35 @@ test('blog without title and url is not added', async () => {
   await api.post('/api/blogs').send(newBlog).expect(400)
   const blogsAtEnd = await helper.blogsInDb()
   expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length)
+})
+
+test('delete a blog with a valid id', async () => {
+  const blogsAtStart = await helper.blogsInDb()
+  const blogToDelete = blogsAtStart[0]
+
+  await api.delete(`/api/blogs/${blogToDelete.id}`).expect(204)
+
+  const blogsAtEnd = await helper.blogsInDb()
+
+  expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length - 1)
+
+  const titles = blogsAtEnd.map((r) => r.title)
+
+  expect(titles).not.toContain(blogToDelete.title)
+})
+
+test('update a blog.likes with a valid id', async () => {
+  const blogsAtStart = await helper.blogsInDb()
+  const blogToUpdate = blogsAtStart[0]
+
+  const newLikes = Math.floor(Math.random() * 1000000)
+  const newBlog = { likes: newLikes }
+
+  //if response = await api.put().send().expect(200)
+  // response.body won't work
+  const response = await api.put(`/api/blogs/${blogToUpdate.id}`).send(newBlog)
+  console.log(response.body)
+  expect(response.body.likes).toEqual(newLikes)
 })
 
 afterAll(() => {
