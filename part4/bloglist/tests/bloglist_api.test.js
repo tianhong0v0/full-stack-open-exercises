@@ -51,6 +51,16 @@ test('a valid blog can be added ', async () => {
   expect(titles).toContain('async/await simplifies making async calls')
 })
 
+test('a blog without likes can be added, and has default likes 0', async () => {
+  const newBlogWithoutLikes = {
+    title: 'nobody likes',
+    author: 'how to be poor',
+    url: 'www.random.com',
+  }
+  const response = await api.post('/api/blogs').send(newBlogWithoutLikes)
+  expect(response.body.likes).toEqual(0)
+})
+
 afterAll(() => {
   mongoose.connection.close()
 })
