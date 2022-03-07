@@ -14,7 +14,7 @@ beforeEach(async () => {
   await Promise.all(promiseArray)
 })
 
-jest.setTimeout(10000)
+jest.setTimeout(20000)
 
 test('all blogs are returned as json', async () => {
   const response = await api
@@ -28,6 +28,27 @@ test('unique identifier property of the blog is named id', async () => {
   const idToGet = helper.initialBlogs[0]._id
   const response = await api.get(`/api/blogs/${idToGet}`)
   expect(response.body.id).toBeDefined()
+})
+
+test('a valid blog can be added ', async () => {
+  const newBlog = {
+    title: 'async/await simplifies making async calls',
+    author: 'Full Stack Open Course',
+    url: 'www.fso.com',
+    likes: 320,
+  }
+
+  await api
+    .post('/api/blogs')
+    .send(newBlog)
+    .expect(201)
+    .expect('Content-Type', /application\/json/)
+
+  const blogAtEnd = await helper.blogsInDb()
+  expect(blogAtEnd).toHaveLength(helper.initialBlogs.length + 1)
+
+  const titles = blogAtEnd.map((n) => n.title)
+  expect(titles).toContain('async/await simplifies making async calls')
 })
 
 afterAll(() => {
