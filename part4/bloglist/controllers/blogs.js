@@ -1,11 +1,17 @@
 const blogsRouter = require('express').Router()
+const { json } = require('express/lib/response')
 const { response, request } = require('../app')
 const Blog = require('../models/blog')
+const User = require('../models/user')
+const { requestLogger } = require('../utils/middleware')
 
-blogsRouter.get('/', (request, response) => {
-  Blog.find({}).then((blogs) => {
-    response.json(blogs)
+blogsRouter.get('/', async (request, response) => {
+  const blogs = await Blog.find({}).populate('user', {
+    username: 1,
+    name: 1,
+    id: 1,
   })
+  response.json(blogs)
 })
 
 blogsRouter.get('/:id', (request, response) => {
@@ -13,10 +19,21 @@ blogsRouter.get('/:id', (request, response) => {
 })
 
 blogsRouter.post('/', async (request, response) => {
-  const blog = new Blog(request.body)
-  const result = await blog.save()
+  const body = request.body
+  const user = await User.findById('622af5ac853cbe35eb8a9fbc')
 
-  response.status(201).json(result)
+  const blog = new Blog({
+    likes: body.likes,
+    title: body.title,
+    author: body.author,
+    url: body.url,
+    user: user._id,
+  })
+
+  const savedBlog = await blog.save()
+  user.blogs = user.blogs.concat(savedBlog._id)
+  await user.save()
+  response.status(201).json(savedBlog)
 })
 
 blogsRouter.delete('/:id', async (request, response) => {
