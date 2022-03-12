@@ -5,6 +5,7 @@ import loginService from './services/login'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
+  const [newBlog, setNewBlog] = useState('')
   const [errorMessage, setErrorMessage] = useState(null)
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
@@ -51,6 +52,15 @@ const App = () => {
     setPassword('')
   }
 
+  const addBlog = (event) => {
+    event.preventDefault()
+
+    blogService.create(newBlog).then((returnedBlog) => {
+      setBlogs(blogs.concat(returnedBlog))
+      setNewBlog('')
+    })
+  }
+
   const loginForm = () => (
     <div>
       <h2>log in to application</h2>
@@ -78,13 +88,14 @@ const App = () => {
     </div>
   )
 
-  const blogForm = () => (
+  const blogslist = () => (
     <div>
       <h2>blogs</h2>
       <p>{user.name} logged in</p>
       <button type='submit' onClick={handleLogout}>
         logout
       </button>
+      {blogForm()}
       <div>
         {blogs.map((blog) => (
           <Blog key={blog.id} blog={blog} />
@@ -93,7 +104,49 @@ const App = () => {
     </div>
   )
 
-  return <div>{user === null ? loginForm() : blogForm()}</div>
+  const blogForm = () => (
+    <div>
+      <h2>create blog</h2>
+      <form onSubmit={addBlog}>
+        <div>
+          title:
+          <input
+            type='text'
+            value={newBlog.title}
+            name=''
+            onChange={({ target }) =>
+              setNewBlog({ ...newBlog, title: target.value })
+            }
+          />
+        </div>
+        <div>
+          author:
+          <input
+            type='text'
+            value={newBlog.author}
+            name=''
+            onChange={({ target }) =>
+              setNewBlog({ ...newBlog, author: target.value })
+            }
+          />
+        </div>
+        <div>
+          url:
+          <input
+            type='text'
+            value={newBlog.url}
+            name=''
+            onChange={({ target }) =>
+              setNewBlog({ ...newBlog, url: target.value })
+            }
+          />
+        </div>
+        <button type='submit'>create</button>
+      </form>
+    </div>
+  )
+
+  return <div>{user === null ? loginForm() : blogslist()}</div>
 }
 
 export default App
