@@ -17,20 +17,11 @@ const tokenExtractor = (request, response, next) => {
   }
   next()
 }
-
+//example solution combine tokenExtractor and userExtractor
 const userExtractor = async (request, response, next) => {
   const decodedToken = jwt.verify(request.token, process.env.SECRET)
-
-  if (!decodedToken.id) {
-    return response.status(401).json({ error: 'token missing or invalid' })
-  }
-
-  const user = await User.findById(decodedToken.id)
-
-  if (user) {
-    request.user = user
-  } else {
-    return response.status.json({ error: 'this user does not exist' })
+  if (decodedToken) {
+    request.user = await User.findById(decodedToken.id)
   }
   next()
 }
