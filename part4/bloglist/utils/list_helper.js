@@ -1,9 +1,6 @@
 const _ = require('lodash')
 
-const dummy = (blogs) => {
-  console.log(blogs)
-  return 1
-}
+const dummy = (blogs) => 1
 
 const totalLikes = (array) => {
   const reducer = (sum, item) => {
@@ -13,14 +10,11 @@ const totalLikes = (array) => {
   return array.length === 0 ? 0 : array.reduce(reducer, 0)
 }
 
-const favoriteBlog = (blogs) => {
-  const fav = blogs.reduce(
-    (tempFav, item) => (tempFav.likes > item.likes ? tempFav : item),
-    blogs[0]
-  )
-  const result = { title: fav.title, author: fav.author, likes: fav.likes }
-  console.log(JSON.stringify(result))
-  return result
+const favoriteBlogs = (blogs) => {
+  if (blogs.length === 0) {
+    return undefined
+  }
+  return blogs.sort((a, b) => b.likes - a.likes)[0]
 }
 
 const mostBlogs = (blogs) => {
@@ -52,7 +46,7 @@ const mostLikes = (blogs) => {
 module.exports = {
   dummy,
   totalLikes,
-  favoriteBlog,
+  favoriteBlog: favoriteBlogs,
   mostBlogs,
   mostLikes,
 }
