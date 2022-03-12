@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from 'react'
 import Blog from './components/Blog'
+import Notification from './components/Notification'
 import blogService from './services/blogs'
 import loginService from './services/login'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
   const [newBlog, setNewBlog] = useState('')
-  const [errorMessage, setErrorMessage] = useState(null)
+  const [notification, setNotification] = useState('')
+
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
@@ -24,6 +26,14 @@ const App = () => {
     }
   }, [])
 
+  const notify = (content, type) => {
+    console.log(`inside notify ${type}`)
+    setNotification({
+      content: content,
+      type: type,
+    })
+  }
+
   const handleLogin = async (event) => {
     event.preventDefault()
     try {
@@ -36,11 +46,16 @@ const App = () => {
       window.localStorage.setItem('loggedNoteappUser', JSON.stringify(user))
       setUsername('')
       setPassword('')
-    } catch (exception) {
-      setErrorMessage('wrong credentials')
+      notify(`${user.username} logged in successfully`, 'info')
       setTimeout(() => {
-        setErrorMessage(null)
-      }, 5000)
+        setNotification(null)
+      }, 1000)
+      console.log('logged in successfully')
+    } catch (exception) {
+      notify('wrong username or password', 'alert')
+      setTimeout(() => {
+        setNotification(null)
+      }, 1000)
     }
   }
 
@@ -52,13 +67,23 @@ const App = () => {
     setPassword('')
   }
 
-  const addBlog = (event) => {
+  const addBlog = async (event) => {
     event.preventDefault()
 
-    blogService.create(newBlog).then((returnedBlog) => {
-      setBlogs(blogs.concat(returnedBlog))
+    try {
+      const response = await blogService.create(newBlog)
+      notify(`a new blog ${response.title} by ${user.username} added!`, 'info')
+      setTimeout(() => {
+        setNotification(null)
+      }, 1000)
+      setBlogs(blogs.concat(response))
       setNewBlog('')
-    })
+    } catch (exception) {
+      notify(`${exception}`, 'alert')
+      setTimeout(() => {
+        setNotification(null)
+      }, 1000)
+    }
   }
 
   const loginForm = () => (
@@ -146,7 +171,12 @@ const App = () => {
     </div>
   )
 
-  return <div>{user === null ? loginForm() : blogslist()}</div>
+  return (
+    <div>
+      <Notification notification={notification} />
+      {user === null ? loginForm() : blogslist()}
+    </div>
+  )
 }
 
 export default App
